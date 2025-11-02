@@ -1,0 +1,7 @@
+{
+  "name": "Fit Buddy AI",
+  "description": "An interactive AI app to track your meals and nutrition. Upload a photo of your meal to get an instant calorie and nutrient breakdown. Chat with an AI assistant for personalized diet advice and use your voice for a real-time conversational experience.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
