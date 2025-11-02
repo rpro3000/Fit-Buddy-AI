@@ -70,3 +70,27 @@ export const StopIcon: React.FC<{className?: string}> = ({ className = "w-6 h-6"
     </svg>
 );
 
+export const ChartBarIcon: React.FC<{className?: string}> = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+    </svg>
+);
+
+export const WeightScaleIcon: React.FC<{className?: string}> = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52v2.653c0 .621-.504 1.125-1.125 1.125H4.875c-.621 0-1.125-.504-1.125-1.125V4.97m14.25 0A48.416 48.416 0 0 1 12 4.5c2.291 0 4.545.16 6.75.47M4.5 4.97c-1.01.143-2.01.317-3 .52m3-.52V7.623c0 .621.504 1.125 1.125 1.125h13.5c.621 0 1.125-.504 1.125-1.125V4.97" />
+    </svg>
+);
+
+export const DumbbellIcon: React.FC<{className?: string}> = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 7.5-3 18.25m19.5 0-9.75-10.75" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25a4.5 4.5 0 0 1-4.5-4.5H3.75a.75.75 0 0 1-.75-.75V12a.75.75 0 0 1 .75-.75h3.75a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5h3.75a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-.75.75h-3.75a4.5 4.5 0 0 1-4.5 4.5v0Z" />
+    </svg>
+);
+
+export const ChevronRightIcon: React.FC<{className?: string}> = ({ className = "w-6 h-6" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+  </svg>
+);

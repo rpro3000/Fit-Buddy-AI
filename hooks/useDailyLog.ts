@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
-import { DailyData, DailyLog, Meal, Nutrients } from '../types';
+import { DailyData, DailyLog, Meal, Nutrients, Training } from '../types';
 import { format } from 'date-fns';
 
 const LATEST_LOG_DATE_KEY = 'fitBuddyAILatestLogDate';
@@ -46,8 +46,19 @@ export const useDailyLog = () => {
   const dailyLog: DailyLog = dailyData[dateKey] ?? {
     meals: [],
     targets: DEFAULT_TARGETS,
+    weight: undefined,
+    trainings: [],
   };
   
+  const getLogForDate = (key: string): DailyLog => {
+      return dailyData[key] ?? {
+          meals: [],
+          targets: DEFAULT_TARGETS,
+          weight: undefined,
+          trainings: [],
+      }
+  }
+
   const addMeal = useCallback((meal: Omit<Meal, 'id' | 'timestamp'>) => {
     const newMeal: Meal = {
       ...meal,
@@ -56,12 +67,43 @@ export const useDailyLog = () => {
     };
 
     setDailyData(prevData => {
-        const currentLog = prevData[dateKey] ?? { meals: [], targets: DEFAULT_TARGETS };
+        const currentLog = getLogForDate(dateKey);
         return {
             ...prevData,
             [dateKey]: {
                 ...currentLog,
                 meals: [...currentLog.meals, newMeal]
+            }
+        };
+    });
+  }, [dateKey]);
+
+  const updateWeight = useCallback((weight: number) => {
+    setDailyData(prevData => {
+        const currentLog = getLogForDate(dateKey);
+        return {
+            ...prevData,
+            [dateKey]: {
+                ...currentLog,
+                weight: weight,
+            }
+        };
+    });
+  }, [dateKey]);
+
+  const addTraining = useCallback((training: Omit<Training, 'id' | 'timestamp'>) => {
+    const newTraining: Training = {
+      ...training,
+      id: crypto.randomUUID(),
+      timestamp: new Date().toISOString(),
+    };
+    setDailyData(prevData => {
+        const currentLog = getLogForDate(dateKey);
+        return {
+            ...prevData,
+            [dateKey]: {
+                ...currentLog,
+                trainings: [...currentLog.trainings, newTraining]
             }
         };
     });
@@ -77,5 +119,5 @@ export const useDailyLog = () => {
     { calories: 0, protein: 0, carbs: 0, fat: 0 }
   );
 
-  return { selectedDate, setSelectedDate, dailyLog, addMeal, totals };
+  return { selectedDate, setSelectedDate, dailyLog, dailyData, addMeal, updateWeight, addTraining, totals };
 };

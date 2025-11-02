@@ -32,7 +32,7 @@ const RecentMealItem: React.FC<RecentMealItemProps> = ({ meal }) => {
         </div>
       </div>
       <div className="text-right">
-        <p className="font-bold text-lg text-blue-600">{meal.nutrients.calories}</p>
+        <p className="font-bold text-lg text-violet-600">{meal.nutrients.calories}</p>
         <p className="text-xs text-gray-400">kcal</p>
       </div>
     </div>

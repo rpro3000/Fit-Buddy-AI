@@ -14,9 +14,19 @@ export interface Meal {
   timestamp: string;
 }
 
+export interface Training {
+    id: string;
+    name: string;
+    duration: number; // in minutes
+    caloriesBurned: number;
+    timestamp: string;
+}
+
 export interface DailyLog {
   meals: Meal[];
   targets: Nutrients;
+  weight?: number;
+  trainings: Training[];
 }
 
 export type DailyData = Record<string, DailyLog>;

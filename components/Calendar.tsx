@@ -1,6 +1,5 @@
-
 import React, { useRef, useEffect } from 'react';
-import { format, addDays, subDays, isSameDay } from 'date-fns';
+import { format, addDays, isSameDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 
 interface CalendarProps {
@@ -13,13 +12,15 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate, onDateChange }) => {
 
   const dates = Array.from({ length: 15 }).map((_, i) => {
     const offset = i - 7;
-    return addDays(selectedDate, offset);
+    return addDays(new Date(), offset); // Centered around today
   });
 
+  // Scroll to selected date on mount or when selectedDate changes
   useEffect(() => {
     if (scrollContainerRef.current) {
-      const centerIndex = 7;
-      const targetItem = scrollContainerRef.current.children[centerIndex] as HTMLElement;
+      const selectedIndex = dates.findIndex(d => isSameDay(d, selectedDate));
+      const targetItem = scrollContainerRef.current.children[selectedIndex] as HTMLElement;
+      
       if (targetItem) {
           const containerWidth = scrollContainerRef.current.offsetWidth;
           const itemWidth = targetItem.offsetWidth;
@@ -27,7 +28,7 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate, onDateChange }) => {
           scrollContainerRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
       }
     }
-  }, [selectedDate]);
+  }, [selectedDate, dates]);
 
 
   return (
@@ -39,10 +40,11 @@ const Calendar: React.FC<CalendarProps> = ({ selectedDate, onDateChange }) => {
                     <button 
                         key={index}
                         onClick={() => onDateChange(date)}
-                        className={`flex-shrink-0 flex flex-col items-center justify-center w-14 h-20 rounded-xl transition-all duration-200 ${isSelected ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+                        className={`flex-shrink-0 flex flex-col items-center justify-center w-16 h-24 rounded-xl transition-all duration-200 ${isSelected ? 'bg-violet-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
                     >
-                        <span className="text-sm font-medium uppercase">{format(date, 'E', { locale: enUS })}</span>
+                        <span className="text-xs font-medium uppercase">{format(date, 'E', { locale: enUS })}</span>
                         <span className="text-2xl font-bold">{format(date, 'd')}</span>
+                        <span className="text-xs font-medium uppercase">{format(date, 'MMM', { locale: enUS })}</span>
                     </button>
                 )
             })}

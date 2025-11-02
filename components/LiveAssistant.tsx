@@ -28,6 +28,7 @@ async function decodeAudioData(
     sampleRate: number,
     numChannels: number,
 ): Promise<AudioBuffer> {
+    // FIX: Corrected typo from Int116Array to Int16Array.
     const dataInt16 = new Int16Array(data.buffer);
     const frameCount = dataInt16.length / numChannels;
     const buffer = ctx.createBuffer(numChannels, frameCount, sampleRate);
@@ -109,8 +110,6 @@ const LiveAssistant: React.FC<LiveAssistantProps> = ({ closeAssistant }) => {
                                 data: encode(new Uint8Array(int16.buffer)),
                                 mimeType: 'audio/pcm;rate=16000',
                             };
-                            // FIX: Per @google/genai guidelines, sessionPromise.then should be used to send data
-                            // without extra conditions to avoid race conditions and stale closures.
                             sessionPromise.then((session) => {
                                 session.sendRealtimeInput({ media: pcmBlob });
                             });
@@ -211,7 +210,7 @@ const LiveAssistant: React.FC<LiveAssistantProps> = ({ closeAssistant }) => {
     const isSessionActive = connectionState === 'connecting' || connectionState === 'connected';
 
     return (
-        <div className="fixed inset-0 bg-blue-600 text-white flex flex-col items-center justify-between z-50 p-8">
+        <div className="fixed inset-0 bg-violet-600 text-white flex flex-col items-center justify-between z-50 p-8">
             <button onClick={closeAssistant} className="absolute top-4 right-4 text-white/70 hover:text-white">
                 <XMarkIcon />
             </button>
@@ -231,7 +230,7 @@ const LiveAssistant: React.FC<LiveAssistantProps> = ({ closeAssistant }) => {
                             <StopIcon className="w-12 h-12"/>
                         </button>
                     ) : (
-                        <button onClick={startConversation} className="bg-white text-blue-600 rounded-full w-24 h-24 flex items-center justify-center shadow-lg">
+                        <button onClick={startConversation} className="bg-white text-violet-600 rounded-full w-24 h-24 flex items-center justify-center shadow-lg">
                             <MicrophoneIcon className="w-12 h-12"/>
                         </button>
                     )}

@@ -1,56 +1,102 @@
 import React, { useState } from 'react';
 import { useDailyLog } from '../hooks/useDailyLog';
 import Calendar from './Calendar';
-import NutrientTracker from './NutrientTracker';
 import RecentMealItem from './RecentMealItem';
 import AddMealModal from './AddMealModal';
-// FIX: Removed unused and non-existent icon imports for BoltIcon and CpuChipIcon.
-import { PlusIcon, FireIcon } from './Icons';
+import AddWeightModal from './AddWeightModal';
+import AddTrainingModal from './AddTrainingModal';
+import { PlusIcon, ChevronRightIcon } from './Icons';
 
-const Dashboard: React.FC = () => {
-  const { selectedDate, setSelectedDate, dailyLog, addMeal, totals } = useDailyLog();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+interface DashboardProps {
+  setActiveView: (view: 'dashboard' | 'chat' | 'progress' | 'live') => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ setActiveView }) => {
+  const { selectedDate, setSelectedDate, dailyLog, addMeal, totals, updateWeight, addTraining } = useDailyLog();
+  const [isMealModalOpen, setIsMealModalOpen] = useState(false);
+  const [isWeightModalOpen, setIsWeightModalOpen] = useState(false);
+  const [isTrainingModalOpen, setIsTrainingModalOpen] = useState(false);
+
 
   const remainingCalories = dailyLog.targets.calories - totals.calories;
+  const calorieProgress = dailyLog.targets.calories > 0 ? (totals.calories / dailyLog.targets.calories) * 100 : 0;
+
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <header className="mb-4">
-        <h1 className="text-3xl font-bold text-gray-900">Fit Buddy <span className="text-blue-600">AI</span></h1>
-        <p className="text-gray-500">Your AI-powered nutrition partner.</p>
+      <header className="mb-4 flex justify-between items-center">
+        <div>
+            <h1 className="text-3xl font-bold text-gray-900">Fit Buddy <span className="text-violet-600">AI</span></h1>
+            <p className="text-gray-500">Your AI-powered nutrition partner.</p>
+        </div>
+        <div className="w-12 h-12 bg-violet-200 rounded-full"></div>
       </header>
       
       <Calendar selectedDate={selectedDate} onDateChange={setSelectedDate} />
 
-      <div className="my-6 p-6 bg-white rounded-2xl shadow-lg">
-        <div className="flex justify-between items-start">
-          <div>
-            <p className="text-gray-500 text-sm">Calories Eaten</p>
-            <p className="text-4xl font-bold text-gray-900">{totals.calories.toLocaleString()}<span className="text-lg text-gray-400 font-normal">/{dailyLog.targets.calories.toLocaleString()}</span></p>
-            <p className={`text-sm font-medium ${remainingCalories >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              {remainingCalories >= 0 ? `${remainingCalories.toLocaleString()} left` : `${Math.abs(remainingCalories).toLocaleString()} over`}
+      <div className="my-6 p-4 bg-white rounded-2xl shadow-md">
+        <div className="flex justify-between items-baseline mb-2">
+            <h2 className="font-bold text-lg text-gray-800">Nutrition Summary</h2>
+            <p className={`text-sm font-semibold ${remainingCalories >= 0 ? 'text-green-600' : 'text-red-500'}`}>
+                {Math.abs(remainingCalories)} kcal {remainingCalories >=0 ? 'left' : 'over'}
             </p>
-          </div>
-          <NutrientTracker 
-            value={totals.calories} 
-            maxValue={dailyLog.targets.calories} 
-            size={80} 
-            strokeWidth={8}
-            color="text-blue-500"
-          >
-             <FireIcon className="w-6 h-6 text-blue-500" />
-          </NutrientTracker>
+        </div>
+
+        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+            <div className="bg-violet-600 h-2.5 rounded-full" style={{ width: `${Math.min(100, calorieProgress)}%` }}></div>
+        </div>
+        
+        <div className="flex justify-between items-center text-sm">
+            <div className="text-center flex-1">
+                <p className="font-bold text-violet-600">{totals.calories}</p>
+                <p className="text-gray-500">Kcal</p>
+            </div>
+            <div className="text-center flex-1">
+                <p className="font-bold text-violet-600">{totals.protein}g</p>
+                <p className="text-gray-500">Protein</p>
+            </div>
+            <div className="text-center flex-1">
+                <p className="font-bold text-violet-600">{totals.carbs}g</p>
+                <p className="text-gray-500">Carbs</p>
+            </div>
+            <div className="text-center flex-1">
+                <p className="font-bold text-violet-600">{totals.fat}g</p>
+                <p className="text-gray-500">Fat</p>
+            </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="p-4 bg-white rounded-2xl shadow-md flex justify-between items-center">
+            <div>
+                <p className="text-sm font-semibold text-gray-800">Weight</p>
+                <p className="text-lg font-bold text-violet-600">{dailyLog.weight ? `${dailyLog.weight} kg` : 'N/A'}</p>
+            </div>
+            <button onClick={() => setIsWeightModalOpen(true)} className="bg-violet-100 text-violet-600 rounded-full p-2"><PlusIcon /></button>
+        </div>
+         <div className="p-4 bg-white rounded-2xl shadow-md flex justify-between items-center">
+            <div>
+                <p className="text-sm font-semibold text-gray-800">Trainings</p>
+                <p className="text-lg font-bold text-violet-600">{dailyLog.trainings.length} session(s)</p>
+            </div>
+            <button onClick={() => setIsTrainingModalOpen(true)} className="bg-violet-100 text-violet-600 rounded-full p-2"><PlusIcon /></button>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <NutrientTracker title="Protein" value={totals.protein} maxValue={dailyLog.targets.protein} unit="g" color="text-red-500" />
-        <NutrientTracker title="Carbs" value={totals.carbs} maxValue={dailyLog.targets.carbs} unit="g" color="text-yellow-500" />
-        <NutrientTracker title="Fat" value={totals.fat} maxValue={dailyLog.targets.fat} unit="g" color="text-green-500" />
+      <div 
+        className="p-4 bg-white rounded-2xl shadow-md flex justify-between items-center mb-6 cursor-pointer"
+        onClick={() => setActiveView('progress')}
+      >
+        <div>
+            <h3 className="font-bold text-gray-800">Progress</h3>
+            <p className="text-sm text-gray-500">View your weight chart</p>
+        </div>
+        <ChevronRightIcon />
       </div>
 
+
       <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Recently Added</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Today's Meals</h2>
         <div className="space-y-3">
           {dailyLog.meals.length > 0 ? (
             dailyLog.meals.slice().reverse().map(meal => (
@@ -66,14 +112,16 @@ const Dashboard: React.FC = () => {
       </div>
       
       <button 
-        onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-20 right-5 md:right-1/2 md:translate-x-[200px] bg-blue-600 text-white rounded-full p-4 shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-110"
+        onClick={() => setIsMealModalOpen(true)}
+        className="fixed bottom-20 right-5 md:right-1/2 md:translate-x-[200px] bg-violet-600 text-white rounded-full p-4 shadow-lg hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 transition-transform transform hover:scale-110"
         aria-label="Add Meal"
       >
         <PlusIcon />
       </button>
 
-      {isModalOpen && <AddMealModal onClose={() => setIsModalOpen(false)} onAddMeal={addMeal} />}
+      {isMealModalOpen && <AddMealModal onClose={() => setIsMealModalOpen(false)} onAddMeal={addMeal} />}
+      {isWeightModalOpen && <AddWeightModal onClose={() => setIsWeightModalOpen(false)} onSave={updateWeight} currentWeight={dailyLog.weight} />}
+      {isTrainingModalOpen && <AddTrainingModal onClose={() => setIsTrainingModalOpen(false)} onAddTraining={addTraining} />}
     </div>
   );
 };
